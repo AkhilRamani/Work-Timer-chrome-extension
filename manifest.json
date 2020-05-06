@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "Timer",
+    "description": "Work hours time calculator.",
+    "version": "0.0.1",
+    "icons": {
+        "128": "assets/icon35.png",
+        "48": "assets/icon35.png",
+        "16": "assets/icon35.png"
+      },
+    "permissions": [
+        "storage",
+        "tabs",
+        "http://*/*",
+        "https://*/*",
+        "webRequest"
+    ],
+    "browser_action": {
+        "default_icon": "assets/icon35.png",
+        "default_popup": "src/popup/popup.html",
+        "default_title": "Timer - Record work hours"
+      },
+    "background": {
+        "scripts": [
+          "src/background/index.js"
+        ]
+    }
+  }
