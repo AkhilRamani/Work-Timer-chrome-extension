@@ -1,3 +1,5 @@
+//imported utils.js
+
 const backgroundWindow = chrome.extension.getBackgroundPage();
 const state = backgroundWindow.state
 
@@ -13,41 +15,40 @@ const sendMessage = (type, body) => {
 }
 // const getElement = id => document.getElementById(id)
 
-const setElementValue = (id, value) => document.getElementById(id).innerHTML = value
 
 async function _onTimerBtnClick(){
     if(state.timer){
+        //stops timer
         const response = await sendMessage('stop-timer');
-        console.log(response)
-        setElementValue(ids.timeText, 'Start timer')
+
+        stopInterval()
+        setElementValue(ids.timeText, getFormattedTime(response.START_TIME))
     }
     else{
+        //starts timer
         const response = await sendMessage('start-timer');
-        console.log('message sent');
-        console.log(state)
-        setElementValue(ids.timeText, response.START_TIME)
+        startInterval(response.START_TIME)
     }
 }
 
 
 function initPopupScript(){
     document.getElementById(ids.timerBtn).addEventListener('click', _onTimerBtnClick)
-    // const timeTxt = getElement(ids.timeText)
+    setElementValue(ids.timeText, '00 : 00 : 00')
 
     if(state.timer){
-        const date1 = new Date(state.timer)
-        const date2 = new Date()
-        const time = (date2.getTime() - date1.getTime())/ 1000
-        setElementValue(ids.timeText, time)
+        startInterval(state.timer)
     }
     else{
-        setElementValue(ids.timeText, 'Start timer')
+        // if(state.prvStoppedTime) setElementValue(ids.timeText, getFormattedTime(state.prvStartTime, state.prvStoppedTime))
+        // else setElementValue(ids.timeText, '00 : 00 : 00')
+        setElementValue(ids.timeText, state.prvStoppedTime ? getFormattedTime(state.prvStartTime, state.prvStoppedTime) : '00 : 00 : 00')
     }
 
     chrome.runtime.onMessage.addListener(function(message, sender, response){
-        if(message.type == 'logged-out'){
+        // if(message.type == 'logged-out'){
 
-        }
+        // }
     })
 }
 

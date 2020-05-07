@@ -2,6 +2,8 @@ const storage = chrome.storage.local;
 let state = {
     storage,
     timer: null,
+    prvStartTime: null,
+    prvStoppedTime: null
 };
 
 chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
@@ -18,7 +20,9 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
         case 'stop-timer':
             storage.get(['START_TIME'], ({START_TIME}) => {
                 storage.remove(['START_TIME'])
-                state.timer = false
+                state.prvStartTime = START_TIME
+                state.prvStoppedTime = Date.now()
+                state.timer = null
                 sendResponse({START_TIME})
             })
             break
