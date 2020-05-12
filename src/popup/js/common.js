@@ -1,3 +1,10 @@
+const sendMessage = (type, body) => {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ type, payload: body }, response => resolve(response))
+    })
+}
+const getElement = id => document.getElementById(id)
+
 const setElementValue = (id, value) => document.getElementById(id).innerHTML = value
 
 const getFormattedTime = (startTime, endTime = null) => {
@@ -20,3 +27,6 @@ const startInterval = from => {
 }
 
 const stopInterval = () => clearInterval(timerInterval)
+
+const hideElement = id => getElement(id).style.display = 'none'
+const showElement = (id, customeDisplay = 'block') => getElement(id).style.display = customeDisplay

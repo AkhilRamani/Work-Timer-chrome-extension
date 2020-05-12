@@ -1,0 +1,89 @@
+.header{
+    display: flex;
+    align-items: center;
+    padding: 0 17px 0 25px;
+    height: 60px;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    margin-bottom: 20px;
+    justify-content: space-between;
+
+    .logo{
+        width: 30px;
+        height: 30px;
+        // background-color: #4F9AFF;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+
+        border-radius: 50%;
+    }
+    h2{
+        opacity: 0.8;
+        margin-left: 15px;
+    }
+    .menu-btn{
+        border-radius: 6px;
+        transform: rotateY(180deg);
+        opacity: 0.4;
+    }
+}
+.content{
+    flex-grow: 1;
+    .timer{
+        width: 70%;
+        margin: auto;
+        padding: 20px;
+        
+        .timer-text-div{
+            background-color: rgb(245, 245, 245);
+            border-radius: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+
+            h1{
+                font-size: 33px;
+                padding: 20px;
+                width: fit-content;
+                color: #838383;
+                margin: auto;
+            }
+        }
+    }
+}
+
+.footer{
+    // padding: 10px;
+    padding: 15px;
+    .auth-info-box{
+        display: none;
+        padding: 15px;
+        background-color: var(--light-gray);
+        border-radius: 7px;
+        align-items: center;
+
+        p{
+            font-size: 14px;
+            opacity: 0.5;
+        }
+    }
+}
+
+.sub-btn{
+    background-color: rgb(228, 228, 228);
+    color: #838383;
+    border-radius: 6px;
+    padding: 10px 15px;
+    outline: none;
+    border: 0;
+    font-family: 'lexend-deca';
+    width: max-content;
+    font-size: 17px;
+    margin-left: 15px;
+    transition-duration: 0.1s;
+}
+.sub-btn:hover{
+    cursor: pointer;
+    background-color: rgb(209, 209, 209);
+    color: #6b6b6b;
+}
+.sub-btn:active{
+    background-color: rgb(196, 196, 196);
+}

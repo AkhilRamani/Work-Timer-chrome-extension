@@ -4,13 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer Chrome Extension</title>
+    <link rel="stylesheet" href="./styles/common.css" >
     <link rel="stylesheet" href="./styles/index.css" >
 </head>
 <body>
-    <h2 id="time-text"></h2>
-    <button id="timer-btn">Start timer</button>
+    <div class="header">
+        <div class="d-flex align-center">
+            <div class="logo"></div>
+            <h2>Pro Worker</h2>
+        </div>
+        <div class="d-flex">
+            <img class="icon-btn menu-btn" id="logout-btn" src="../../assets/logout.icon.svg" >
+        </div>
+    </div>
+    <div class="content">
+        <div class="timer">
+            <div class="timer-text-div">
+                <h1 id="time-text">0  :  0  :  0</h1>
+            </div>
+            <button id="timer-btn" class="btn">Start</button>
+        </div>
+    </div>
 
-    <script src="../utils.js"></script>
+    <div class="footer">
+        <div class="auth-info-box" id="auth-info">
+            <div>
+
+                <p>Sign in with your google account to record and get analysis of your work</p>
+            </div>
+            <div>
+                
+                <button class="sub-btn" id="signin-btn" >Sign in</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/common.js"></script>
     <script src="./popup.js"></script>
 </body>
 </html>

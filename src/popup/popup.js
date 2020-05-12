@@ -5,15 +5,10 @@ const state = backgroundWindow.state
 
 const ids = {
     timeText: 'time-text',
-    timerBtn: 'timer-btn'
+    timerBtn: 'timer-btn',
+    logoutBtn: 'logout-btn',
+    authInfo: 'auth-info'
 }
-
-const sendMessage = (type, body) => {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ type, payload: body }, response => resolve(response))
-    })
-}
-// const getElement = id => document.getElementById(id)
 
 
 async function _onTimerBtnClick(){
@@ -23,33 +18,45 @@ async function _onTimerBtnClick(){
 
         stopInterval()
         setElementValue(ids.timeText, getFormattedTime(response.START_TIME))
+        setElementValue(ids.timerBtn, 'Start')
     }
     else{
         //starts timer
         const response = await sendMessage('start-timer');
         startInterval(response.START_TIME)
+        setElementValue(ids.timerBtn, 'Stop')
     }
 }
 
+const _logout = () => {
+    sendMessage('logout')
+        .then(res => {
+            hideElement(ids.logoutBtn)
+            showElement(ids.authInfo, 'flex')
+        })
+        .catch(e => {})
+}
 
-function initPopupScript(){
+async function initPopupScript(){
+    const logoutBtn = getElement(ids.logoutBtn)
+    
+    const authenticated = await sendMessage('auth-stats')
+    if(!authenticated) {
+        hideElement(ids.logoutBtn)
+        showElement(ids.authInfo, 'flex')
+    }
+    
     document.getElementById(ids.timerBtn).addEventListener('click', _onTimerBtnClick)
-    setElementValue(ids.timeText, '00 : 00 : 00')
+    logoutBtn.addEventListener('click', _logout)
+    document.getElementById('signin-btn').addEventListener('click', () => window.location.href = './auth.html')
 
     if(state.timer){
         startInterval(state.timer)
+        setElementValue(ids.timerBtn, 'Stop')
     }
     else{
-        // if(state.prvStoppedTime) setElementValue(ids.timeText, getFormattedTime(state.prvStartTime, state.prvStoppedTime))
-        // else setElementValue(ids.timeText, '00 : 00 : 00')
         setElementValue(ids.timeText, state.prvStoppedTime ? getFormattedTime(state.prvStartTime, state.prvStoppedTime) : '00 : 00 : 00')
     }
-
-    chrome.runtime.onMessage.addListener(function(message, sender, response){
-        // if(message.type == 'logged-out'){
-
-        // }
-    })
 }
 
 

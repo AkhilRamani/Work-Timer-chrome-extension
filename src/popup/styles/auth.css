@@ -1,0 +1,42 @@
+.google-btn-wrapper{
+    width: 80%;
+    background-color: var(--light-gray);
+    height: 51px;
+    padding: auto 20px!important;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    border-radius: 6px;
+}
+#google-login{
+    width: 100%;
+    height: 100%;
+    color: rgba(0, 0, 0, 0.8);
+    background-color: var(--light-gray);
+}
+#google-login img{
+    margin-right: 15px;
+    height: 20px;
+}
+#google-login:hover{
+    cursor: pointer;
+    background-color: rgba(238, 238, 238, 0.966);
+}
+#google-login:active{
+    background-color: rgba(230, 230, 230, 0.966);
+}
+#google-loader{
+    display: none;
+}
+.content{
+    flex-direction: column;
+}
+.content p {
+    opacity: 0.5;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.auth-footer{
+    width: 97%;
+    align-self: center;
+    /* padding: 0 5px; */
+}

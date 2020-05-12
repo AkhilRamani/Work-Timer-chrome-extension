@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer Chrome Extension</title>
+    <link rel="stylesheet" href="./styles/common.css" >
+    <link rel="stylesheet" href="./styles/index.css" >
+    <link rel="stylesheet" href="./styles/auth.css">
+</head>
+<body>
+    <div class="header">
+        <div class="d-flex align-center" >
+            <!-- <div class="logo"></div> -->
+            
+
+            <img class="icon-btn back-btn" id="back-btn" src="../../assets/imgs/back.icon.svg">
+
+            <h2>Sign in</h2>
+        </div>
+    </div>
+
+    <section class="content d-flex justify-center align-center">
+        <p>Sign in to your Pro Worker account</p>
+        
+        <div class="google-btn-wrapper d-flex align-center justify-center">
+            <button class="d-flex align-center justify-center" id='google-login'>
+                <img src="../../assets/google-logo.svg">
+                Sign in with Google
+    
+            </button>
+
+            <div class="animate_loader" id="google-loader">
+                <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none"/>
+                </svg>
+            </div>
+        </div>
+
+        
+
+    </section>
+
+    <!-- footer image -->
+    <img class="auth-footer" src="../../assets/imgs/bar-chart.svg">
+
+
+    <!-- <script src="../utils.js"></script> -->
+    <script src="./js/common.js"></script>
+    <script src="./js/auth.js"></script>
+</body>
+</html>

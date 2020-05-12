@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Timer",
-    "description": "Work hours time calculator.",
     "version": "0.0.1",
+    "name": "Pro Worker",
+    "description": "Records your worked hours with optimised background processing free timer and give value added breakdown analysis of recorded time",
     "icons": {
         "128": "assets/icon35.png",
         "48": "assets/icon35.png",
@@ -13,7 +13,8 @@
         "tabs",
         "http://*/*",
         "https://*/*",
-        "webRequest"
+        "webRequest",
+        "identity"
     ],
     "browser_action": {
         "default_icon": "assets/icon35.png",
@@ -22,7 +23,18 @@
       },
     "background": {
         "scripts": [
+          "lib/firebase.js",
+          "lib/firebase-auth.js",
+          "src/background/firebase-utils.js",
           "src/background/index.js"
         ]
+    },
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self';",
+    "oauth2": {
+      "client_id": "1010240089470-nrplrpbv2kiddk097t4j5dihs0e7n3m8.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ]
     }
   }
