@@ -6,15 +6,19 @@ const hoursCollection = db.collection('hours')
 
 
 function startAuth(interactive) {
+    const failedNotification = () => notificaton('Sign in failed!', 'Authentication with Google failed. Please try again')
+
     return new Promise((resolve, reject) => {
         // Request an OAuth token from the Chrome Identity API.
         chrome.identity.getAuthToken({ interactive: !!interactive }, function (token) {
             if (chrome.runtime.lastError && !interactive) {
                 console.log('It was not possible to get a token programmatically.')
+                failedNotification()
                 reject()
             }
             else if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError)
+                console.log('runtime error', chrome.runtime.lastError)
+                failedNotification()
                 reject()
             }
             else if (token) {
@@ -37,6 +41,7 @@ function startAuth(interactive) {
             }
             else {
                 console.error('The OAuth Token was null')
+                failedNotification()
                 reject()
             }
         });
@@ -69,6 +74,7 @@ function logout() {
                 })
                 .catch(e => {
                     console.log(e)
+                    notificaton('Logout failed!', 'The logout request failed, please try again.')
                     reject(e)
                 })
         })
@@ -102,7 +108,7 @@ const fetchStartYear = async () => {
     }
 }
 
-const getDataFromServer = (year) => {
+const getDataFromServer = year => {
     return new Promise((resolve, reject) => {
         db.collection('hours').doc(firebase.auth().currentUser.uid).collection(`${year}`).get()
             .then(res => resolve(formatResponse(res)))
@@ -110,7 +116,7 @@ const getDataFromServer = (year) => {
     })
 }
 
-const formatResponse = (docs) => {
+const formatResponse = docs => {
     const formattedData = []
     docs.forEach(doc => {
         const data = doc.data()

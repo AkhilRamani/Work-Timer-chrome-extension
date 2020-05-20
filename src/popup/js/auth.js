@@ -6,7 +6,10 @@ const _googleLogin = async () => {
     gLoginBtn.style.display = 'none'
 
     sendMessage('login')
-        .then(res => window.location.href = './popup.html')
+        .then(res => {
+            if(res.STATUS == true) window.location.href = './popup.html'
+            else throw null
+        })
         .catch(e => {
             console.log(e)
             gLoginBtn.style.display = 'block'

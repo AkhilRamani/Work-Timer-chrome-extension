@@ -8,6 +8,7 @@ let state = {
     startYear: null
 };
 
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.type) {
         case 'auth-stats':
@@ -20,6 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log('value is set')
                 state.timer = START_TIME
                 sendResponse({ START_TIME })
+                dispRecordingIndicator()
             })
             break
 
@@ -34,6 +36,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 firebase.auth().currentUser && saveWorkedHours(state.prvStartTime, state.prvStoppedTime, firebase.auth().currentUser.uid)
                     .then(res => console.log('save-workedHoures', res))
                     .catch(e => console.log('save-error', e))
+                
+                hideRecordingIndicator()
             })
 
 

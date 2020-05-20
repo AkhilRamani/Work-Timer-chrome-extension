@@ -24,10 +24,6 @@ section::-webkit-scrollbar-thumb {
   background-color: #dfdfdf;
 }
 
-section::-webkit-scrollbar-thumb:window-inactive {
-  /*Your styles here*/
-}
-
 .data {
   width: 100%;
 }
