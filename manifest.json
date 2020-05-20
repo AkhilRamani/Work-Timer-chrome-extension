@@ -4,9 +4,9 @@
     "name": "Pro Worker",
     "description": "Records your worked hours with optimised background processing free timer and give value added breakdown analysis of recorded time",
     "icons": {
-        "128": "assets/icon35.png",
-        "48": "assets/icon35.png",
-        "16": "assets/icon35.png"
+        "128": "assets/app-icon/icon35.png",
+        "48": "assets/app-icon/icon35.png",
+        "16": "assets/app-icon/icon35.png"
       },
     "permissions": [
         "storage",
@@ -14,19 +14,24 @@
         "http://*/*",
         "https://*/*",
         "webRequest",
-        "identity"
+        "identity",
+        "notifications"
     ],
     "browser_action": {
-        "default_icon": "assets/icon35.png",
+        "default_icon": "assets/app-icon/icon35.png",
         "default_popup": "src/popup/popup.html",
         "default_title": "Timer - Record work hours"
       },
     "background": {
         "scripts": [
+          "./env.vars.js",
           "lib/firebase.js",
           "lib/firebase-auth.js",
+          "lib/firebase-firestore.js",
+          "lib/moment.js",
           "src/background/firebase-utils.js",
-          "src/background/index.js"
+          "src/common.utils.js",
+          "src/background/background.js"
         ]
     },
     "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self';",

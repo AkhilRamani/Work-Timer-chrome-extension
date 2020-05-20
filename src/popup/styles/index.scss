@@ -27,6 +27,7 @@
 }
 .content{
     flex-grow: 1;
+    
     .timer{
         width: 70%;
         margin: auto;
@@ -44,6 +45,21 @@
                 width: fit-content;
                 color: #838383;
                 margin: auto;
+            }
+        }
+        .btn-div{
+            height: 50.8px;
+            #list-btn{
+                margin-left: 15px;
+                height: 100%;
+                img{
+                    opacity: 0.45;
+                }
+            }
+            .list-btn:hover{
+                img{
+                    opacity: 0.5;
+                }
             }
         }
     }

@@ -27,6 +27,13 @@ button{
     font-size: 17px;
     transition-duration: 0.1s;
 }
+button:hover{
+    cursor: pointer;
+    background-color: rgb(228, 228, 228);
+}
+button:active{
+    background-color: rgb(209, 209, 209);
+}
 .d-flex{
     display: flex;
 }
@@ -40,11 +47,12 @@ button{
 .btn{
     border: 0;
     outline: none;
-    padding: 15px 20px;
+    height: inherit;
+    /* padding: 15px 20px; */
     width: 100%;
     color: white;
     font-size: 17px;
-    font-weight: 600;
+    /* font-weight: 600; */
     letter-spacing: 0.4px;
     font-family: sans-serif;
     background-color: rgb(62, 143, 248);
@@ -102,6 +110,7 @@ button{
 /* spinner styles */
 .animate_loader{
     height: 30px;
+    display: flex;
 }
 .circular {
     animation: rotate 2s linear infinite;

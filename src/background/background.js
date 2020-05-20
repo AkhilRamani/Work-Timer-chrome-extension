@@ -4,11 +4,9 @@ let state = {
     timer: null,
     prvStartTime: null,
     prvStoppedTime: null,
-    auth: false
+    auth: false,
+    startYear: null
 };
-
-// TODO: check auth onload
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.type) {
@@ -32,7 +30,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 state.prvStoppedTime = Date.now()
                 state.timer = null
                 sendResponse({ START_TIME })
+
+                firebase.auth().currentUser && saveWorkedHours(state.prvStartTime, state.prvStoppedTime, firebase.auth().currentUser.uid)
+                    .then(res => console.log('save-workedHoures', res))
+                    .catch(e => console.log('save-error', e))
             })
+
+
+            break
+
+        case 'get-data':
+            getDataFromServer(state.startYear)
+                .then(res => sendResponse({
+                    STATUS: true,
+                    data: res
+                }))
+                .catch(e => {
+                    console.log('data from server error', e)
+                    sendResponse({STATUS: false})
+                })
+
             break
 
         case 'login':
@@ -57,6 +74,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     return true
 })
+
+firebase.auth().onAuthStateChanged(user => {
+    if(user){
+        console.log('user logged in', user)
+        state.auth = true
+        state.uid = user.uid
+
+        storage.get(['START_YEAR'], async res => {
+            if(res.START_YEAR){
+                state.startYear = res.START_YEAR
+            }
+            else{
+                const year = await fetchStartYear()
+                state.startYear = year
+            }
+        })
+    }
+    else{
+        console.log('user is not logged in')
+    }
+});
 
 
 window.state = state

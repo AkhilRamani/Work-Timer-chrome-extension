@@ -63,6 +63,23 @@
   margin: auto;
 }
 
+.content .timer .btn-div {
+  height: 50.8px;
+}
+
+.content .timer .btn-div #list-btn {
+  margin-left: 15px;
+  height: 100%;
+}
+
+.content .timer .btn-div #list-btn img {
+  opacity: 0.45;
+}
+
+.content .timer .btn-div .list-btn:hover img {
+  opacity: 0.5;
+}
+
 .footer {
   padding: 15px;
 }

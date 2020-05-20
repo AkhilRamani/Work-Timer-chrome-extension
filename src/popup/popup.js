@@ -7,7 +7,8 @@ const ids = {
     timeText: 'time-text',
     timerBtn: 'timer-btn',
     logoutBtn: 'logout-btn',
-    authInfo: 'auth-info'
+    authInfo: 'auth-info',
+    listBtn: 'list-btn'
 }
 
 
@@ -33,22 +34,28 @@ const _logout = () => {
         .then(res => {
             hideElement(ids.logoutBtn)
             showElement(ids.authInfo, 'flex')
+            hideElement(ids.listBtn)
         })
-        .catch(e => {})
+        .catch(e => {
+            //TODO
+        })
 }
 
 async function initPopupScript(){
     const logoutBtn = getElement(ids.logoutBtn)
+    const listBtn = getElement(ids.listBtn)
     
     const authenticated = await sendMessage('auth-stats')
     if(!authenticated) {
         hideElement(ids.logoutBtn)
         showElement(ids.authInfo, 'flex')
+        hideElement(ids.listBtn)
     }
     
     document.getElementById(ids.timerBtn).addEventListener('click', _onTimerBtnClick)
     logoutBtn.addEventListener('click', _logout)
     document.getElementById('signin-btn').addEventListener('click', () => window.location.href = './auth.html')
+    listBtn.addEventListener('click', () => window.location.href = './listData.html')
 
     if(state.timer){
         startInterval(state.timer)

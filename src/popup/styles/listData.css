@@ -1,0 +1,94 @@
+.header {
+  margin-bottom: 0;
+}
+
+section {
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  padding: 10px 10px 0;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+section .animate_loader {
+  margin-top: 10px;
+}
+
+section::-webkit-scrollbar {
+  width: 5px;
+}
+
+section::-webkit-scrollbar-thumb {
+  background-color: #dfdfdf;
+}
+
+section::-webkit-scrollbar-thumb:window-inactive {
+  /*Your styles here*/
+}
+
+.data {
+  width: 100%;
+}
+
+.row {
+  height: 45px;
+  background-color: var(--light-gray);
+  padding: 5px 15px;
+  -webkit-transition-duration: 0.2s;
+          transition-duration: 0.2s;
+  border-radius: 6px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.row p {
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.row img {
+  width: 12px;
+  opacity: 0.3;
+}
+
+.row .d {
+  width: 80px;
+  font-variant: all-petite-caps;
+}
+
+.row:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.collapse {
+  max-height: 0;
+  overflow: hidden;
+  -webkit-transition: max-height 0.2s cubic-bezier(0, 0, 0.3, 1.4);
+  transition: max-height 0.2s cubic-bezier(0, 0, 0.3, 1.4);
+  background-color: var(--light-gray);
+  border-radius: 0 0 6px 6px;
+  margin-bottom: 10px;
+}
+
+.collapse .content {
+  border-top: 1px solid rgba(128, 128, 128, 0.137);
+}
+
+.collapse .content ul {
+  margin: 10px 0;
+  margin-left: 55px;
+  list-style-type: none;
+}
+
+.collapse .content ul li {
+  font-size: 16px;
+  opacity: 0.5;
+  padding: 7px 0;
+  font-variant: petite-caps;
+  text-transform: lowercase;
+}
+/*# sourceMappingURL=listData.css.map */

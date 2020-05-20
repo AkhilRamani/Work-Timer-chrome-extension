@@ -1,16 +1,8 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyAharixP7viQM-177X3tN8_8NtB8nv1Ags",
-    authDomain: "pro-worker.firebaseapp.com",
-    databaseURL: "https://pro-worker.firebaseio.com",
-    projectId: "pro-worker",
-    storageBucket: "pro-worker.appspot.com",
-    messagingSenderId: "1010240089470",
-    appId: "1:1010240089470:web:28180c141306f10464172f",
-    measurementId: "G-6Y06ESQ4PR"
-};
-const app = firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig)
 // firebase.analytics();
-// const appDb = app.database().ref()
+
+const db = firebase.firestore()
+const hoursCollection = db.collection('hours')
 
 
 function startAuth(interactive) {
@@ -62,14 +54,16 @@ function logout() {
     return new Promise((resolve, reject) => {
 
         chrome.storage.local.get(['TOKEN'], ({TOKEN: token}) => {
+            //TODO: 400 ERROR CODE- probably not working
             window.fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token)
                 .then(() => {
                     firebase.auth().signOut()
-                        .then(res => {
-                            console.log('logout from firebse', res)
+                        .then(() => {
+                            console.log('logout from firebse')
                             chrome.identity.removeCachedAuthToken({ token: token }, function () {
-                                alert('removed')
-                                resolve(res)
+                                // alert('removed')
+                                notificaton('Pro Worker - Logout success', 'You have successfully logout from Pro Worker. Sign in back to continue recording your work-time.')
+                                resolve()
                             })
                         })
                 })
@@ -79,4 +73,65 @@ function logout() {
                 })
         })
     })
+}
+
+
+const saveWorkedHours = (startTime, endTime, uid) => {
+    const date = new Date(endTime)
+    return db.collection('hours').doc(uid).collection(`${date.getFullYear()}`).add({
+        start: startTime,
+        end: endTime
+    })
+    // `${date.getMonth() + 1}-${date.getFullYear()}`
+}
+
+const fetchStartYear = async () => {
+    try{
+        const doc = await hoursCollection.doc(firebase.auth().currentUser.uid).get()
+        if(doc.exists && doc.data().startYear){
+            return doc.data().startYear
+        }
+        else{
+            const year = new Date().getFullYear()
+            await hoursCollection.doc(firebase.auth().currentUser.uid).set({startYear: year})
+            return year
+        }
+    }
+    catch(e){
+        console.error('error from setStartYear', e)
+    }
+}
+
+const getDataFromServer = (year) => {
+    return new Promise((resolve, reject) => {
+        db.collection('hours').doc(firebase.auth().currentUser.uid).collection(`${year}`).get()
+            .then(res => resolve(formatResponse(res)))
+            .catch(e => reject(e))
+    })
+}
+
+const formatResponse = (docs) => {
+    const formattedData = []
+    docs.forEach(doc => {
+        const data = doc.data()
+        const day = moment(data.start).format('DD MMM')
+        const timeDiff = (new Date(data.end).getTime() - new Date(data.start).getTime())/1000
+        const workTime = {
+            start: moment(data.start).format('LT'),
+            end: moment(data.end).format('LT')
+        }
+        const index = formattedData.findIndex(data => data.day == day)
+        if(index > -1){
+            formattedData[index].totalTime += timeDiff
+            formattedData[index].times.push(workTime)
+        }
+        else{
+            formattedData.push({
+                day,
+                totalTime: timeDiff,
+                times: [workTime]
+            })
+        }
+    })
+    return formattedData
 }

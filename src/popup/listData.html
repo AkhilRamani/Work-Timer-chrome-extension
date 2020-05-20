@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Timer Chrome Extension</title>
+    <link rel="stylesheet" href="./styles/common.css" >
+    <link rel="stylesheet" href="./styles/index.css" >
+    <link rel="stylesheet" href="./styles/listData.css">
+</head>
+<body>
+    <header class="header">
+        <div class="d-flex align-center" >
+            <img class="icon-btn back-btn" id="back-btn" src="../../assets/imgs/back.icon.svg">
+            <h2>Recorded time</h2>
+        </div>
+    </header>
+
+    <section class="content d-flex">
+        <div class="data" id="data" >
+    
+            <div class="row d-flex align-center" >
+                <div class="d-flex">
+                    <p class="d">15 May</p>
+                    <p>2 hours 34 minutes</p>
+                </div>
+                <img class="row-btn" src="../../assets/imgs/down-arrow.png" >
+            </div>
+            <div class="collapse" >
+                <div class="content" >
+                    <ul>
+                        <li>10:00 am  -  3:30 pm</li>
+                        <li>10:00 am  -  3:30 pm</li>
+                        <li>10:00 am  -  3:30 pm</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="animate_loader" id="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none"/>
+            </svg>
+        </div>
+    </section>
+
+
+    <script src="./js/common.js"></script>
+    <script src="./js/listData.js"></script>
+</body>
+</html>
