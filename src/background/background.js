@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ START_TIME })
 
                 firebase.auth().currentUser && saveWorkedHours(state.prvStartTime, state.prvStoppedTime, firebase.auth().currentUser.uid)
-                    .then(res => console.log('save-workedHoures', res))
+                    // .then(res => console.log('save-workedHoures', res))
                     .catch(e => console.log('save-error', e))
                 
                 hideRecordingIndicator()
@@ -44,7 +44,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break
 
         case 'get-data':
-            getDataFromServer(state.startYear)
+            // console.log(request.payload)
+            getDataFromServer(state.startYear, request.payload.paginated)
                 .then(res => sendResponse({
                     STATUS: true,
                     data: res

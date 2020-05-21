@@ -1,37 +1,42 @@
 const bindRowClickHandler = () => {
     let rows = document.getElementsByClassName("row")
-
     for (let i = 0; i < rows.length; i++) {
-        rows[i].addEventListener("click", function () {
-            this.classList.toggle("active")
-            let content = this.nextElementSibling
+        rows[i].onclick = () => {
+            // this.classList.toggle("active")
+            const element = rows[i]
+            let content = element.nextElementSibling
             if (content.style.maxHeight) {
                 content.style.maxHeight = null
-                this.style.borderRadius = '6px'
-                this.getElementsByTagName('img')[0].style.transform = "rotate(0deg)"
+                element.style.borderRadius = '6px'
+                element.getElementsByTagName('img')[0].style.transform = "rotate(0deg)"
             } else {
                 content.style.maxHeight = content.scrollHeight + "px"
-                this.style.borderRadius = '6px 6px 0 0'
-                this.getElementsByTagName('img')[0].style.transform = "rotate(180deg)"
+                element.style.borderRadius = '6px 6px 0 0'
+                element.getElementsByTagName('img')[0].style.transform = "rotate(180deg)"
             }
-        })
+        }
     }
 }
 
 const plural = value => value > 0 ? 's' : ''
 const getTotalTime = time => {
     const hours = Math.floor(time / 3600) % 24
-    const minutes = Math.floor(time / 60 ) % 60
+    const minutes = Math.floor(time / 60) % 60
     const seconds = Math.floor(time % 60)
     return hours == 0 ? minutes == 0 ? `${seconds} second${plural(seconds)}` : `${minutes} minute${plural(minutes)}` : `${hours} hour${plural(hours)} ${minutes} minute${plural(minutes)}`
 }
 
-const initPopupScript = async () => {
-    const res = await sendMessage('get-data')
+const fetchAndListData = async paginated => {
+    const res = await sendMessage('get-data', { paginated })
+    hideElement('loader')
+
     if (!res.STATUS) {
         return console.log('error occured')
     }
-    hideElement('loader')
+    else if (!res.data) {
+        return console.log('no data')
+    }
+
     res.data.forEach(data => {
         let div = document.createElement('div')
         let timesStr = ''
@@ -54,7 +59,15 @@ const initPopupScript = async () => {
         document.getElementById('data').append(div)
     })
     bindRowClickHandler()
+
+}
+
+const initPopupScript = async () => {
     document.getElementById('back-btn').addEventListener('click', () => window.location.href = './popup.html')
+
+    fetchAndListData()
+
+    document.getElementById('tmp-btn').addEventListener('click', () => fetchAndListData(true))
 }
 
 document.addEventListener('DOMContentLoaded', initPopupScript);
