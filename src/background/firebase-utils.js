@@ -83,21 +83,21 @@ function logout() {
 
 
 const saveWorkedHours = (startTime, endTime, uid) => {
-    const year = new Date(endTime).getFullYear()
     const day = moment(startTime).format('DD MMM')
 
-    return db.collection('users').doc(uid).collection('time-records').doc(`${year}`).collection('days').doc(day).set({
+    return db.collection('users').doc(uid).collection('time-records').doc(day).set({
         times: firebase.firestore.FieldValue.arrayUnion({
             start: startTime,
             end: endTime
-        })
+        }),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
     }, {merge: true})
 }
 
 let cursor = null
-const getDataFromServer = (year, paginated) => {
+const getDataFromServer = (paginated) => {
     return new Promise((resolve, reject) => {
-        let query = usersCollection.doc(firebase.auth().currentUser.uid).collection(`time-records`).doc(`${year}`).collection('days').limit(1)
+        let query = usersCollection.doc(firebase.auth().currentUser.uid).collection(`time-records`).orderBy('createdAt').limit(1)
         if(paginated) query = query.startAfter(cursor)
 
         query.get()
@@ -162,21 +162,4 @@ const formatResponse_Old = docs => {
         }
     })
     return formattedData
-}
-
-const fetchStartYear = async () => {
-    try{
-        const doc = await usersCollection.doc(firebase.auth().currentUser.uid).get()
-        if(doc.exists && doc.data().startYear){
-            return doc.data().startYear
-        }
-        else{
-            const year = new Date().getFullYear()
-            await usersCollection.doc(firebase.auth().currentUser.uid).set({startYear: year})
-            return year
-        }
-    }
-    catch(e){
-        console.error('error from setStartYear', e)
-    }
 }

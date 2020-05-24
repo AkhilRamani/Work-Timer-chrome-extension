@@ -80,13 +80,88 @@
   opacity: 0.5;
 }
 
-.footer {
-  padding: 15px;
+.graph-div {
+  -webkit-box-flex: 3.1;
+      -ms-flex-positive: 3.1;
+          flex-grow: 3.1;
+  padding-right: 5px;
+}
+
+.graph-div ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.graph-div li {
+  width: 30px;
+  background-color: black;
+  margin-left: 5px;
+  list-style-type: none;
+  background-color: #ebebeb;
+  border-radius: 6px 6px 0 0;
+  -webkit-transition-duration: 0.16s;
+          transition-duration: 0.16s;
+  position: relative;
+  display: inline-block;
+}
+
+.graph-div li div {
+  visibility: hidden;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  background-color: var(--light-gray);
+  text-align: center;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 6px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.233) 0px 1px 3px;
+          box-shadow: rgba(0, 0, 0, 0.233) 0px 1px 3px;
+  position: absolute;
+  z-index: 1;
+  bottom: 50%;
+  opacity: 0;
+  -webkit-transition: opacity 0.15s ease-in-out;
+  transition: opacity 0.15s ease-in-out;
+  -webkit-transition-delay: 0.5s;
+          transition-delay: 0.5s;
+}
+
+.graph-div li div p {
+  opacity: 0.6;
+  font-size: 13px;
+}
+
+.graph-div .b-l div {
+  left: 100%;
+  right: unset;
+}
+
+.graph-div .b-r div {
+  right: 100%;
+  left: unset;
+}
+
+.graph-div li:hover {
+  background-color: #ff4d4d;
+}
+
+.graph-div li:hover div {
+  visibility: visible;
+  opacity: 1;
 }
 
 .footer .auth-info-box {
   display: none;
   padding: 15px;
+  margin: 15px;
   background-color: var(--light-gray);
   border-radius: 7px;
   -webkit-box-align: center;

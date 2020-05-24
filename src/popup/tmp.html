@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <style>
+        body {
+            width: 350px;
+            height: 390px;
+            /* font-family: 'lexend-deca'; */
+            border: 1px solid;
+            /* margin: 0; */
+            /* display: flex;
+            flex-direction: column; */
+            /* align-items: flex-end; */
+        }
+
+        ul {
+            display: flex;
+            align-items: flex-end;
+            padding: 0;
+            height: 150px;
+        }
+
+        li {
+            height: 60px;
+            width: 30px;
+            background-color: black;
+            margin-left: 5px;
+            list-style-type: none;
+            background-color: rgb(228, 228, 228);
+            border-radius: 6px 6px 0 0;
+            transition-duration: 0.1s;
+        }
+        li:hover{
+            background-color: rgb(255, 77, 77);
+        }
+    </style>
+    
+</head>
+
+<body>
+    <ul class="graph">
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+        <li class="bar"></li>
+    </ul>
+
+    <script>
+        const bars = document.getElementsByClassName('bar')
+        for(let i = 0; i < bars.length; i++){
+            // bars[i].style.height = ((i == 0 ? 0.5 : i)*100)/10 + '%'
+            bars[i].style.height = (Math.random(1)*100)/5 + '%'
+        }
+    </script>
+</body>
+
+</html>

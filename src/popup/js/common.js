@@ -30,3 +30,10 @@ const stopInterval = () => clearInterval(timerInterval)
 
 const hideElement = id => getElement(id).style.display = 'none'
 const showElement = (id, customeDisplay = 'block') => getElement(id).style.display = customeDisplay
+
+const getTimeValue = timeStamp => {
+    const hour = Math.floor(timeStamp / 3600) % 24
+    const minute = Math.floor(timeStamp / 60) % 60
+    const second = Math.floor(timeStamp % 60)
+    return { hour, minute, second }
+}

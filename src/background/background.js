@@ -5,7 +5,9 @@ let state = {
     prvStartTime: null,
     prvStoppedTime: null,
     auth: false,
-    startYear: null
+    workData: [],
+    graphData: {},
+    noDataOnServer: false
 };
 
 
@@ -15,10 +17,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse(state.auth)
             break
 
+        case 'graph-data':
+            sendResponse(state.graphData)
+            break
+
         case 'start-timer':
             const START_TIME = Date.now()
             storage.set({ START_TIME }, () => {
-                console.log('value is set')
                 state.timer = START_TIME
                 sendResponse({ START_TIME })
                 dispRecordingIndicator()
@@ -31,29 +36,39 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 state.prvStartTime = START_TIME
                 state.prvStoppedTime = Date.now()
                 state.timer = null
-                sendResponse({ START_TIME })
+                // sendResponse({ START_TIME })
 
-                firebase.auth().currentUser && saveWorkedHours(state.prvStartTime, state.prvStoppedTime, firebase.auth().currentUser.uid)
-                    // .then(res => console.log('save-workedHoures', res))
-                    .catch(e => console.log('save-error', e))
-                
+                state.auth && saveAndCacheWorkHour(state.prvStartTime, state.prvStoppedTime)
                 hideRecordingIndicator()
+                sendResponse({ START_TIME, graphData: state.graphData })
             })
 
 
             break
 
         case 'get-data':
-            // console.log(request.payload)
-            getDataFromServer(state.startYear, request.payload.paginated)
-                .then(res => sendResponse({
-                    STATUS: true,
-                    data: res
-                }))
-                .catch(e => {
-                    console.log('data from server error', e)
-                    sendResponse({STATUS: false})
-                })
+            //send in memory data in first page
+            !request.payload.paginated ?
+                sendResponse({ STATUS: true, data: state.workData })
+                :
+                !state.noDataOnServer ?
+                    getDataFromServer(request.payload.paginated)
+                        .then(res => {
+                            if (!res) state.noDataOnServer = true
+                            sendResponse({
+                                STATUS: true,
+                                data: res
+                            })
+                        })
+                        .catch(e => {
+                            console.log('data from server error', e)
+                            sendResponse({ STATUS: false })
+                        })
+                    :
+                    sendResponse({
+                        STATUS: true,
+                        data: null
+                    })
 
             break
 
@@ -61,7 +76,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             startAuth(true)
                 .then(res => {
                     state.auth = true
-                    sendResponse({ STATUS: true })
+                    //awaits for initial data being loaded for Graph generation
+                    fetchInitialData()
+                        .then(() => sendResponse({ STATUS: true }))
+                    // sendResponse({ STATUS: true })
                 })
                 .catch(e => sendResponse({ STATUS: false }))
             break
@@ -72,7 +90,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     state.auth = false
                     sendResponse({ STATUS: true })
                 })
-                .catch(e => sendResponse({STATUS: false}))
+                .catch(e => sendResponse({ STATUS: false }))
             break
 
     }
@@ -81,25 +99,139 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 firebase.auth().onAuthStateChanged(user => {
-    if(user){
+    if (user) {
         console.log('user logged in', user)
         state.auth = true
         state.uid = user.uid
 
-        storage.get(['START_YEAR'], async res => {
-            if(res.START_YEAR){
-                state.startYear = res.START_YEAR
-            }
-            else{
-                const year = await fetchStartYear()
-                state.startYear = year
-            }
-        })
+        fetchInitialData()
     }
-    else{
+    else {
         console.log('user is not logged in')
     }
-});
+})
 
+const fetchInitialData = () => {
+    return getDataFromServer()
+        .then(data => {
+            if (!data) {
+                state.noDataOnServer = true
+                return state.graphData = genGraphData([])
+            }
+            state.workData = data
+            const graphData = genGraphData(data.slice(0, 10))
+            state.graphData = graphData
+            // state.graphData = graphTestData()
+        })
+        .catch(e => console.log('--auth | getData', e))
+}
+
+const genGraphData = timesArr => {
+    //finds the max totalTime value for Graph bar hight
+    let max = 0
+    timesArr.forEach(d => max = d.totalTime > max && d.totalTime)
+
+    let date = new Date()
+    date.setDate(date.getDate() - (timesArr.length - 1))
+
+    let emptyDataArr = []
+    for (let i = 0; i < 10 - timesArr.length; i++) {
+        date.setDate(date.getDate() - 1)
+        emptyDataArr.push({
+            day: moment(date).format('DD MMM'),
+            time: 0
+        })
+    }
+
+    return {
+        max,
+        data: [
+            ...timesArr.map(time => ({ day: time.day, time: time.totalTime })),
+            ...emptyDataArr
+        ].reverse()
+    }
+}
+
+const saveAndCacheWorkHour = (startTime, endTime) => {
+    firebase.auth().currentUser && saveWorkedHours(startTime, endTime, firebase.auth().currentUser.uid)
+        // .then(res => console.log('save-workedHoures', res))
+        .catch(e => console.log('save-error', e))
+
+    const day = moment(startTime).format('DD MMM')
+    const index = state.workData.findIndex(data => data.day == day)
+    if (index > -1) {
+        state.workData[index]['times'].push(getFormattedTimeObj(startTime, endTime))
+        state.workData[index]['totalTime'] += getTimeDiff(startTime, endTime)
+
+        const graphData = state.graphData
+        const totalTime = state.workData[index].totalTime
+
+        if (graphData.max < totalTime) state.graphData.max = totalTime
+        state.graphData.data[9].time = totalTime
+    }
+    else {
+        const workObj = {
+            day,
+            times: [
+                getFormattedTimeObj(startTime, startTime)
+            ],
+            totalTime: getTimeDiff(startTime, endTime)
+        }
+
+        state.workData.push(workObj)
+        state.graphData.max = workObj.totalTime
+        state.graphData.data[9].time = workObj.totalTime
+    }
+}
 
 window.state = state
+
+
+
+const graphTestData = () => {
+    return {
+        max: 100,
+        data: [
+            {
+                day: '23 May',
+                time: 45
+            },
+            {
+                day: '22 May',
+                time: 60
+            },
+            {
+                day: '21 May',
+                time: 30
+            },
+            {
+                day: '20 May',
+                time: 80
+            },
+            {
+                day: '19 May',
+                time: 20
+            },
+            {
+                day: '18 May',
+                time: 100
+            },
+            {
+                day: '17 May',
+                time: 90
+            },
+            {
+                day: '16 May',
+                time: 50
+            },
+            {
+                day: '15 May',
+                time: 60
+            },
+            {
+                day: '14 May',
+                time: 70
+            },
+        ]
+    }
+}

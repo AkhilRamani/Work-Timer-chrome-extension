@@ -20,6 +20,7 @@ const bindRowClickHandler = () => {
 
 const plural = value => value > 0 ? 's' : ''
 const getTotalTime = time => {
+    //TODO: replace with common.js fun
     const hours = Math.floor(time / 3600) % 24
     const minutes = Math.floor(time / 60) % 60
     const seconds = Math.floor(time % 60)
