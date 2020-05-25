@@ -97,7 +97,7 @@ const saveWorkedHours = (startTime, endTime, uid) => {
 let cursor = null
 const getDataFromServer = (paginated) => {
     return new Promise((resolve, reject) => {
-        let query = usersCollection.doc(firebase.auth().currentUser.uid).collection(`time-records`).orderBy('createdAt').limit(1)
+        let query = usersCollection.doc(firebase.auth().currentUser.uid).collection(`time-records`).orderBy('createdAt', 'desc').limit(10)
         if(paginated) query = query.startAfter(cursor)
 
         query.get()

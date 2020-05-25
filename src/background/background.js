@@ -121,36 +121,39 @@ const fetchInitialData = () => {
             state.workData = data
             const graphData = genGraphData(data.slice(0, 10))
             state.graphData = graphData
+            console.log(state.graphData)
             // state.graphData = graphTestData()
         })
         .catch(e => console.log('--auth | getData', e))
 }
 
+//---under development -----------
 const genGraphData = timesArr => {
-    //finds the max totalTime value for Graph bar hight
     let max = 0
-    timesArr.forEach(d => max = d.totalTime > max && d.totalTime)
-
+    let rawArr = []
     let date = new Date()
-    date.setDate(date.getDate() - (timesArr.length - 1))
 
-    let emptyDataArr = []
-    for (let i = 0; i < 10 - timesArr.length; i++) {
+    for (let i = 0; i < 10; i++) {
+        let formattedDate = moment(date).format('DD MMM')
+        const index = timesArr.findIndex(data => data.day == formattedDate)
+        if (index == -1) rawArr.unshift({ day: formattedDate, time: 0 })
+        else {
+            const tmp = timesArr[index]
+            rawArr.unshift({
+                day: tmp.day,
+                time: tmp.totalTime
+            })
+            if (tmp.totalTime > max) max = tmp.totalTime
+        }
         date.setDate(date.getDate() - 1)
-        emptyDataArr.push({
-            day: moment(date).format('DD MMM'),
-            time: 0
-        })
     }
-
     return {
         max,
-        data: [
-            ...timesArr.map(time => ({ day: time.day, time: time.totalTime })),
-            ...emptyDataArr
-        ].reverse()
+        data: rawArr
     }
 }
+//-----------------------------------------
+
 
 const saveAndCacheWorkHour = (startTime, endTime) => {
     firebase.auth().currentUser && saveWorkedHours(startTime, endTime, firebase.auth().currentUser.uid)
@@ -158,30 +161,31 @@ const saveAndCacheWorkHour = (startTime, endTime) => {
         .catch(e => console.log('save-error', e))
 
     const day = moment(startTime).format('DD MMM')
+    let totalTime = getTimeDiff(startTime, endTime);
+
     const index = state.workData.findIndex(data => data.day == day)
     if (index > -1) {
         state.workData[index]['times'].push(getFormattedTimeObj(startTime, endTime))
-        state.workData[index]['totalTime'] += getTimeDiff(startTime, endTime)
-
-        const graphData = state.graphData
-        const totalTime = state.workData[index].totalTime
-
-        if (graphData.max < totalTime) state.graphData.max = totalTime
-        state.graphData.data[9].time = totalTime
+        state.workData[index]['totalTime'] += totalTime
+        totalTime = state.workData[index].totalTime
     }
     else {
-        const workObj = {
+        state.workData.unshift({
             day,
+            totalTime,
             times: [
                 getFormattedTimeObj(startTime, startTime)
-            ],
-            totalTime: getTimeDiff(startTime, endTime)
-        }
-
-        state.workData.push(workObj)
-        state.graphData.max = workObj.totalTime
-        state.graphData.data[9].time = workObj.totalTime
+            ]
+        })
     }
+
+    cacheGraphData(day, totalTime)
+}
+
+const cacheGraphData = (day, totalTime) => {
+    if (state.graphData.max < totalTime) state.graphData.max = totalTime
+    if (state.graphData.data[9].day = day) state.graphData.data[9].time = totalTime
+    else state.graphData = genGraphData([{ day, time: totalTime }, ...state.graphData.data.slice(1, 10)])
 }
 
 window.state = state

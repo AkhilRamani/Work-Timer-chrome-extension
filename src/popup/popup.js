@@ -62,7 +62,7 @@ const genGraph = graphData => {
                     <p>${dayObj.day}</p>
                     <p>${str}</p>
                 </div>`
-                bars[i].style.pointerEvents = 'auto'
+            bars[i].style.pointerEvents = 'auto'
         }
         else{
             bars[i].style.pointerEvents = 'none'
