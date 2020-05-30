@@ -13,7 +13,7 @@ const getFormattedTime = (startTime, endTime = null) => {
     const time = (date2.getTime() - date1.getTime()) / 1000
 
     const hours = Math.floor(time / 3600) % 24
-    const minutes = Math.floor(time / 60 ) % 60
+    const minutes = Math.floor(time / 60) % 60
     const seconds = Math.floor(time % 60)
     return `${hours} : ${minutes} : ${seconds}`
 }
@@ -37,3 +37,10 @@ const getTimeValue = timeStamp => {
     const second = Math.floor(timeStamp % 60)
     return { hour, minute, second }
 }
+
+(() => {
+    const donateBtn = getElement('donate-btn')
+    if (donateBtn) {
+        donateBtn.onclick = () => chrome.tabs.create({ url: 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EU8J76N3JU7KL&currency_code=USD&source=url' })
+    }
+})()

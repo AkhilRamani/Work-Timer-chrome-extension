@@ -9,3 +9,6 @@ const firebaseConfig = {
     appId: "",
     measurementId: ""
 };
+
+//paypal donation link
+// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EU8J76N3JU7KL&currency_code=USD&source=url

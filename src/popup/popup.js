@@ -47,7 +47,7 @@ const _logout = () => {
 
 const genGraph = graphData => {
     console.log('from graph fun', state.auth)
-    if(!state.auth) return null
+    if (!state.auth) return null
 
     const bars = document.getElementsByClassName('bar')
     for (let i = 0; i < bars.length; i++) {
@@ -55,18 +55,14 @@ const genGraph = graphData => {
         const time = dayObj.time
         bars[i].style.height = graphData.max == 0 ? '10%' : (time * 100) / graphData.max + 10 + '%'
 
-        if(time){
-            const {hour, minute, second} = getTimeValue(time)
-            const str = hour == 0 ? minute == 0 ? `${second}s` : `${minute}m ${second}s` : `${hour}h ${minute}m`
-            bars[i].innerHTML = `<div>
+        const { hour, minute, second } = getTimeValue(time)
+        const str = hour == 0 ? minute == 0 ? `${second}s` : `${minute}m ${second}s` : `${hour}h ${minute}m`
+        bars[i].innerHTML = `<div>
                     <p>${dayObj.day}</p>
-                    <p>${str}</p>
+                    ${time ? `<p class="time">${str}</p>` : ''}
                 </div>`
-            bars[i].style.pointerEvents = 'auto'
-        }
-        else{
-            bars[i].style.pointerEvents = 'none'
-        }
+        if (!time) bars[i].classList.add('no-data')
+
     }
 }
 
@@ -99,7 +95,7 @@ async function initPopupScript() {
         setElementValue(ids.timerBtn, 'Stop')
     }
     else {
-        setElementValue(ids.timeText, state.prvStoppedTime ? getFormattedTime(state.prvStartTime, state.prvStoppedTime) : '00 : 00 : 00')
+        setElementValue(ids.timeText, state.prvStoppedTime ? getFormattedTime(state.prvStartTime, state.prvStoppedTime) : '0 : 0 : 0')
     }
 
 }

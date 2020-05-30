@@ -1,7 +1,8 @@
 .header{
     display: flex;
     align-items: center;
-    padding: 0 17px 0 25px;
+    // padding: 0 17px 0 25px;
+    padding: 0 10px 0 25px;
     height: 60px;
     border-bottom: 1px solid rgb(221, 221, 221);
     margin-bottom: 20px;
@@ -10,7 +11,6 @@
     .logo{
         width: 33px;
         height: 33px;
-        // background-color: #4F9AFF;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
 
         border-radius: 50%;
@@ -21,8 +21,8 @@
     }
     .menu-btn{
         border-radius: 6px;
-        transform: rotateY(180deg);
         opacity: 0.4;
+        // margin-right: 10px;
     }
 }
 .content{
@@ -109,7 +109,17 @@
             p{
                 opacity: 0.6;
                 font-size: 13px;
-                // font-variant: all-petite-caps;
+            }
+            .time{
+                margin-top: 2px;
+            }
+        }
+
+        &:hover{
+            background-color: var(--p-red);
+            div{
+                visibility: visible;
+                opacity: 1;
             }
         }
     }
@@ -127,11 +137,9 @@
             left: unset;
         }
     }
-    li:hover{
-        background-color: rgb(255, 77, 77);
-        div{
-            visibility: visible;
-            opacity: 1;
+    .no-data{
+        &:hover{
+            background-color: rgb(158, 158, 158);
         }
     }
 }
@@ -175,3 +183,30 @@
 .sub-btn:active{
     background-color: rgb(196, 196, 196);
 }
+
+
+
+.sklton-line {
+    // background-color: rgb(255, 255, 255);
+    background-image: linear-gradient(
+        to right,
+      transparent 33%,
+      rgb(255, 255, 255) 50%,
+      transparent 66%
+    );
+    background-size:300% 100%;
+    animation: g-shine 1.4s infinite;
+    
+    @keyframes g-shine {
+        0% {
+            background-position: right;    
+        }
+        /*100% {
+            background-position: left; it's the default value, no need to define it
+        }*/
+    }
+    background-color: rgba(0, 0, 0, 0.041);
+  }
+//   .sklton-color{
+//       background-color: rgba(0, 0, 0, 0.041)
+//   }

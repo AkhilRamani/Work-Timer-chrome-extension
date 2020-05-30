@@ -26,7 +26,7 @@ function startAuth(interactive) {
                 var credential = firebase.auth.GoogleAuthProvider.credential(null, token)
                 firebase.auth().signInWithCredential(credential)
                     .then(res => {
-                        console.log(res)
+                        // console.log(res)
                         chrome.storage.local.set({ TOKEN: token }, () => resolve(res))
                         // resolve(res)
                     })
@@ -55,16 +55,17 @@ function startSignIn() {
 }
 
 function logout() {
-    console.log('logout called')
     return new Promise((resolve, reject) => {
 
         chrome.storage.local.get(['TOKEN'], ({TOKEN: token}) => {
             //TODO: 400 ERROR CODE- probably not working
             window.fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token)
-                .then(() => {
+                .then((res) => {
+                    res.headers["Set-Cookie"] = "HttpOnly;Secure;SameSite=Strict"   //TODO: needs to test working or not
+                    // console.log('logout reponse', res)
                     firebase.auth().signOut()
                         .then(() => {
-                            console.log('logout from firebse')
+                            // console.log('logout from firebse')
                             chrome.identity.removeCachedAuthToken({ token: token }, function () {
                                 // alert('removed')
                                 notificaton('Pro Worker - Logout success', 'You have successfully logout from Pro Worker. Sign in back to continue recording your work-time.')
@@ -84,6 +85,7 @@ function logout() {
 
 const saveWorkedHours = (startTime, endTime, uid) => {
     const day = moment(startTime).format('DD MMM')
+    // const day = '10 May'
 
     return db.collection('users').doc(uid).collection('time-records').doc(day).set({
         times: firebase.firestore.FieldValue.arrayUnion({
@@ -94,16 +96,20 @@ const saveWorkedHours = (startTime, endTime, uid) => {
     }, {merge: true})
 }
 
-let cursor = null
+let cursor = {
+    firstPage: null,
+    lastDoc: null
+}
 const getDataFromServer = (paginated) => {
     return new Promise((resolve, reject) => {
         let query = usersCollection.doc(firebase.auth().currentUser.uid).collection(`time-records`).orderBy('createdAt', 'desc').limit(10)
-        if(paginated) query = query.startAfter(cursor)
+        if(paginated) query = query.startAfter(cursor.lastDoc)
 
         query.get()
             .then(res => {
                 if(res.empty) return resolve(null)
-                cursor = res.docs[res.docs.length - 1]
+                cursor.lastDoc = res.docs[res.docs.length - 1]
+                if(!cursor.firstPage) cursor.firstPage = res.docs[res.docs.length - 1]
                 resolve(formatResponse(res))
             })
             .catch(e => reject(e))

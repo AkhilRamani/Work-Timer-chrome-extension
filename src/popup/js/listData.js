@@ -1,3 +1,10 @@
+let observerActive = false
+const intersactionObserver = new IntersectionObserver(entries => {
+    if (entries[0].intersectionRatio <= 0) return
+    showElement('loader')
+    fetchAndListData(true)
+})
+
 const bindRowClickHandler = () => {
     let rows = document.getElementsByClassName("row")
     for (let i = 0; i < rows.length; i++) {
@@ -32,10 +39,12 @@ const fetchAndListData = async paginated => {
     hideElement('loader')
 
     if (!res.STATUS) {
+        //TODO:
         return console.log('error occured')
     }
     else if (!res.data) {
-        return console.log('no data')
+        intersactionObserver.disconnect()
+        return
     }
 
     res.data.forEach(data => {
@@ -61,14 +70,16 @@ const fetchAndListData = async paginated => {
     })
     bindRowClickHandler()
 
+    
+    if(!observerActive){
+        intersactionObserver.observe(getElement('obs'))
+        observerActive = true
+    } 
 }
 
 const initPopupScript = async () => {
     document.getElementById('back-btn').addEventListener('click', () => window.location.href = './popup.html')
-
     fetchAndListData()
-
-    document.getElementById('tmp-btn').addEventListener('click', () => fetchAndListData(true))
 }
 
 document.addEventListener('DOMContentLoaded', initPopupScript);

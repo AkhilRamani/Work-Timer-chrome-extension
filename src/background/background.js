@@ -7,7 +7,7 @@ let state = {
     auth: false,
     workData: [],
     graphData: {},
-    noDataOnServer: false
+    // noDataOnServer: false
 };
 
 
@@ -48,27 +48,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         case 'get-data':
             //send in memory data in first page
-            !request.payload.paginated ?
+            if (!request.payload.paginated) {
                 sendResponse({ STATUS: true, data: state.workData })
-                :
-                !state.noDataOnServer ?
-                    getDataFromServer(request.payload.paginated)
-                        .then(res => {
-                            if (!res) state.noDataOnServer = true
-                            sendResponse({
-                                STATUS: true,
-                                data: res
-                            })
+                cursor.lastDoc = cursor.firstPage    //defined in firebase-utils.js
+            }
+            else {
+                getDataFromServer(request.payload.paginated)
+                    .then(res => {
+                        // if (!res) state.noDataOnServer = true
+                        sendResponse({
+                            STATUS: true,
+                            data: res
                         })
-                        .catch(e => {
-                            console.log('data from server error', e)
-                            sendResponse({ STATUS: false })
-                        })
-                    :
-                    sendResponse({
-                        STATUS: true,
-                        data: null
                     })
+                    .catch(e => {
+                        console.log('data from server error', e)
+                        sendResponse({ STATUS: false })
+                    })
+            }
 
             break
 
@@ -89,6 +86,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 .then(res => {
                     state.auth = false
                     sendResponse({ STATUS: true })
+                    state.workData = []
                 })
                 .catch(e => sendResponse({ STATUS: false }))
             break
@@ -97,6 +95,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     return true
 })
+
 
 firebase.auth().onAuthStateChanged(user => {
     if (user) {
@@ -115,13 +114,13 @@ const fetchInitialData = () => {
     return getDataFromServer()
         .then(data => {
             if (!data) {
-                state.noDataOnServer = true
+                // state.noDataOnServer = true
                 return state.graphData = genGraphData([])
             }
             state.workData = data
             const graphData = genGraphData(data.slice(0, 10))
             state.graphData = graphData
-            console.log(state.graphData)
+            // console.log(state.graphData)
             // state.graphData = graphTestData()
         })
         .catch(e => console.log('--auth | getData', e))
@@ -184,7 +183,7 @@ const saveAndCacheWorkHour = (startTime, endTime) => {
 
 const cacheGraphData = (day, totalTime) => {
     if (state.graphData.max < totalTime) state.graphData.max = totalTime
-    if (state.graphData.data[9].day = day) state.graphData.data[9].time = totalTime
+    if (state.graphData.data[9].day == day) state.graphData.data[9].time = totalTime
     else state.graphData = genGraphData([{ day, time: totalTime }, ...state.graphData.data.slice(1, 10)])
 }
 

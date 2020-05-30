@@ -1,0 +1,46 @@
+$color: #ff4d4d;
+@keyframes sheen {
+  0% {
+    transform: skewY(-45deg) translateX(0);
+  }
+  100% {
+    transform: skewY(-45deg) translateX(12.5em);
+  }
+}
+.donate-btn {
+    padding: 6px 10px;
+    margin-right: 10px;
+    color: gray;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: rgb(246, 246, 246);
+    font-size: 12px;
+    display: inline-block;
+    border-radius: 0.3em;
+    // border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    &:before {
+      content: "";
+      background-color: rgba(255,255,255,0.5);
+      height: 100%;
+      width: 3em;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: -4.5em;
+      transform: skewX(-45deg) translateX(0);
+      transition: none;
+    }
+    &:hover {
+      background-color: #ff4d4d;
+      color: #fff;
+      // border-bottom: 4px solid darken($color, 20%);
+      &:before {
+        transform: skewX(-45deg) translateX(13.5em);
+       transition: all 0.5s ease-in-out;
+      }
+    }
+  }
