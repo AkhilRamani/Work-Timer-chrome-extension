@@ -53,7 +53,8 @@
 }
 
 .donate-btn:hover {
-  background-color: #ff4d4d;
+  /* background-color: #ff4d4d; */
+  background-color: var(--p-red);
   color: #fff;
 }
 

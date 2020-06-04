@@ -1,0 +1,46 @@
+section{
+    flex-direction: column;
+}
+
+.about{
+    flex-grow: 1;
+    padding: 15px;
+    border-radius: 6px;
+    flex-direction: column;
+    .logo{
+        height: 90px;
+    }
+    h4{
+        margin-top: 10px;
+        opacity: 0.6;
+            // margin-bottom: 6px;
+        font-size: 17px;
+    }
+    span{
+        opacity: 0.5;
+        font-size: 15px;
+    }
+    .dev{
+        text-decoration: underline;
+        font-style: normal;
+        &:hover{
+            // opacity: 0.8;
+            font-style: oblique;
+            cursor: pointer;
+        }
+    }
+}
+.footer{
+    height: 50px;
+    background-color: rgb(241, 241, 241);
+    p{
+        margin: auto;
+        font-size: 15px;
+        font-weight: 800;
+        opacity: 0.25;
+        img{
+            height: 14px;
+            padding: 5px;
+        }
+    }
+}

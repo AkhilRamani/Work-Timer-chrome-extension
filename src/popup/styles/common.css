@@ -51,6 +51,9 @@ button:active{
 .justify-center{
     justify-content: center;
 }
+.body{
+    height: calc(100% - 80px);
+}
 
 .btn{
     border: 0;
@@ -216,7 +219,7 @@ button:active{
   }
   
   .donate-btn:hover {
-    background-color: #ff4d4d;
+    background-color: var(--p-red);
     color: #fff;
   }
   

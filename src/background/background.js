@@ -68,6 +68,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
 
             break
+        
+        case 'get-user-data':
+            storage.get(['USER'], ({USER}) => {
+                sendResponse(USER)
+            })
 
         case 'login':
             startAuth(true)
@@ -87,6 +92,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     state.auth = false
                     sendResponse({ STATUS: true })
                     state.workData = []
+                    storage.remove(['USER'])
                 })
                 .catch(e => sendResponse({ STATUS: false }))
             break
@@ -99,11 +105,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 firebase.auth().onAuthStateChanged(user => {
     if (user) {
-        console.log('user logged in', user)
         state.auth = true
         state.uid = user.uid
 
         fetchInitialData()
+        saveUserData({name: user.displayName, email: user.email, avatar: user.photoURL})
     }
     else {
         console.log('user is not logged in')
@@ -128,6 +134,7 @@ const fetchInitialData = () => {
 
 //---under development -----------
 const genGraphData = timesArr => {
+    console.log('form genGraphData - timesArr', timesArr)
     let max = 0
     let rawArr = []
     let date = new Date()
@@ -140,12 +147,13 @@ const genGraphData = timesArr => {
             const tmp = timesArr[index]
             rawArr.unshift({
                 day: tmp.day,
-                time: tmp.totalTime
+                time: tmp.totalTime || tmp.time
             })
             if (tmp.totalTime > max) max = tmp.totalTime
         }
         date.setDate(date.getDate() - 1)
     }
+    console.log('generated data err', rawArr)
     return {
         max,
         data: rawArr
@@ -182,9 +190,14 @@ const saveAndCacheWorkHour = (startTime, endTime) => {
 }
 
 const cacheGraphData = (day, totalTime) => {
+    console.log('from cacheGraphData', {day, totalTime})
     if (state.graphData.max < totalTime) state.graphData.max = totalTime
     if (state.graphData.data[9].day == day) state.graphData.data[9].time = totalTime
     else state.graphData = genGraphData([{ day, time: totalTime }, ...state.graphData.data.slice(1, 10)])
+}
+
+const saveUserData = (data) => {
+    storage.set({ USER: data })
 }
 
 window.state = state

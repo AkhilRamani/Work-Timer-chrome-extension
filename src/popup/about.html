@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Timer Chrome Extension</title>
+    <link rel="stylesheet" href="./styles/common.css">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/about.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="d-flex align-center">
+            <img class="icon-btn back-btn" id="back-btn" navigateTo='./profile.html'
+                src="../../assets/imgs/back.icon.svg">
+            <h2>About</h2>
+        </div>
+        <button class="donate-btn" id="donate-btn">DONATE</button>
+    </header>
+
+    <section class="d-flex body">
+        <div class="about d-flex align-center">
+            <img class="logo" src="../../assets/app-icon/icon128.png">
+            <h4>Pro Worker</h4>
+            <span>v0.7.0</span>
+            <span style="margin-top: 10px;" id="dev-name">&copy; <em class="dev">Akhil Ramani</em></span>
+        </div>
+
+        <div class="footer d-flex">
+            <p class="d-flex align-center">Made with <img src="../../assets/imgs/heart.icon.svg"> in Sydney</p>
+        </div>
+    </section>
+
+    <script src="./js/common.js"></script>
+    <script src="./js/about.js"></script>
+</body>
+
+</html>

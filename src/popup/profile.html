@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Timer Chrome Extension</title>
+    <link rel="stylesheet" href="./styles/common.css">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/profile.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="d-flex align-center">
+            <img class="icon-btn back-btn" id="back-btn" navigateTo="./popup.html" src="../../assets/imgs/back.icon.svg">
+            <h2>Profile</h2>
+        </div>
+        <button class="donate-btn" id="donate-btn">DONATE</button>
+    </header>
+
+    <section class="body d-flex">
+        <div>
+            <div class="profile d-flex align-center">
+                <!-- https://news.usc.edu/files/2016/03/Sample_Steven-1-824x549.jpg -->
+                <img id="avatar" src="https://news.usc.edu/files/2016/03/Sample_Steven-1-824x549.jpg" />
+                <div class="info">
+                    <h4 id="name"></h4>
+                    <p id="email"></p>
+                </div>
+            </div>
+            <!-- <br/> -->
+            <div class="btn-grp d-flex">
+                <button class="d-flex align-center" id="about-btn">
+                    <img src="../../assets/imgs/info-white.icon.svg">
+                    About
+                </button>
+                <div class="btn-wrapper d-flex align-center">
+                    <button class="d-flex align-center" id="logout-btn" >
+                        <img src="../../assets/logout.icon.svg">
+                        Logout
+                    </button>
+                    <div class="animate_loader" id="btn-loader" style="margin: auto;height: 25px;display: none;">
+                        <svg class="circular" viewBox="25 25 50 50">
+                            <circle class="path" cx="50" cy="50" r="20" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="donate-box">
+            <h4>Consider donating if you find it useful</h4>
+            <p>Your donation will help me to manage the server and database costs to keep service free for everyone</p>
+        </div>
+    </section>
+
+
+    <script src="./js/common.js"></script>
+    <script src="./js/profile.js"></script>
+</body>
+
+</html>

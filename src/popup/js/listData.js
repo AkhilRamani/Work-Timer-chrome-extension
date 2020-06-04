@@ -78,7 +78,6 @@ const fetchAndListData = async paginated => {
 }
 
 const initPopupScript = async () => {
-    document.getElementById('back-btn').addEventListener('click', () => window.location.href = './popup.html')
     fetchAndListData()
 }
 

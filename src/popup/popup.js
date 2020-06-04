@@ -6,7 +6,8 @@ const state = backgroundWindow.state
 const ids = {
     timeText: 'time-text',
     timerBtn: 'timer-btn',
-    logoutBtn: 'logout-btn',
+    profileBtn: 'profile-btn',
+    aboutBtn: 'about-btn',
     authInfo: 'auth-info',
     listBtn: 'list-btn',
     graph: 'graph'
@@ -32,21 +33,22 @@ async function _onTimerBtnClick() {
     }
 }
 
-const _logout = () => {
-    sendMessage('logout')
-        .then(res => {
-            hideElement(ids.logoutBtn)
-            showElement(ids.authInfo, 'flex')
-            hideElement(ids.listBtn)
-            hideElement(ids.graph)
-        })
-        .catch(e => {
-            //TODO
-        })
-}
+// const _logout = () => {
+//     return window.location.href = './profile.html'
+//     sendMessage('logout')
+//         .then(res => {
+//             hideElement(ids.logoutBtn)
+//             showElement(ids.authInfo, 'flex')
+//             hideElement(ids.listBtn)
+//             hideElement(ids.graph)
+//         })
+//         .catch(e => {
+//             //TODO
+//         })
+// }
 
 const genGraph = graphData => {
-    console.log('from graph fun', state.auth)
+    console.log(graphData)
     if (!state.auth) return null
 
     const bars = document.getElementsByClassName('bar')
@@ -61,13 +63,12 @@ const genGraph = graphData => {
                     <p>${dayObj.day}</p>
                     ${time ? `<p class="time">${str}</p>` : ''}
                 </div>`
-        if (!time) bars[i].classList.add('no-data')
-
+        bars[i].classList.add(time ? 'data-hover' : 'no-data-hover')
     }
 }
 
 async function initPopupScript() {
-    const logoutBtn = getElement(ids.logoutBtn)
+    const profileBtn = getElement(ids.profileBtn)
     const listBtn = getElement(ids.listBtn)
 
     sendMessage('graph-data')
@@ -79,14 +80,17 @@ async function initPopupScript() {
 
     const authenticated = await sendMessage('auth-stats')
     if (!authenticated) {
-        hideElement(ids.logoutBtn)
+        hideElement(ids.profileBtn)
         showElement(ids.authInfo, 'flex')
         hideElement(ids.listBtn)
         hideElement(ids.graph)
+        hideElement(ids.profileBtn)
+        showElement(ids.aboutBtn)
     }
 
     document.getElementById(ids.timerBtn).addEventListener('click', _onTimerBtnClick)
-    logoutBtn.addEventListener('click', _logout)
+    profileBtn.addEventListener('click', () => window.location.href = './profile.html')
+    getElement(ids.aboutBtn).addEventListener('click', () => window.location.href = './about.html')
     document.getElementById('signin-btn').addEventListener('click', () => window.location.href = './auth.html')
     listBtn.addEventListener('click', () => window.location.href = './listData.html')
 

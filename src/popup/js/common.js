@@ -40,6 +40,9 @@ const getTimeValue = timeStamp => {
 
 (() => {
     const donateBtn = getElement('donate-btn')
+    const backBtn = getElement('back-btn')
+
+    backBtn && backBtn.addEventListener('click' ,() => window.location.href = backBtn.getAttribute('navigateTo'))
     if (donateBtn) {
         donateBtn.onclick = () => chrome.tabs.create({ url: 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=EU8J76N3JU7KL&currency_code=USD&source=url' })
     }
